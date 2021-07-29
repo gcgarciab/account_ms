@@ -1,8 +1,11 @@
 package com.misiontic.account_ms.models;
 
+import org.springframework.data.annotation.Id;
+
 import java.util.Date;
 
 public class Transaction {
+    @Id
     private String id;
     private String userIdOrigin;
     private String userIdDestiny;
