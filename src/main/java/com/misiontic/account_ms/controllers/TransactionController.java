@@ -26,42 +26,43 @@ public class TransactionController {
 
     @PostMapping("/transactions")
     Transaction newTransaction(@RequestBody Transaction transaction) {
-        Account accountOrigin = accountRepository.findById(transaction.getUserIdOrigin()).orElse(null);
-        Account accountDestiny = accountRepository.findById(transaction.getUserIdDestiny()).orElse(null);
+        Account accountOrigin = this.accountRepository.findById(transaction.getUserIdOrigin()).orElse(null);
+        Account accountDestiny = this.accountRepository.findById(transaction.getUserIdDestiny()).orElse(null);
 
-        if (accountOrigin == null)
+        if (accountOrigin == null) {
             throw new AccountNotFoundException("No se encontro una cuenta con el userId: " + transaction.getUserIdOrigin());
+        }
 
-        if (accountDestiny == null)
+        if (accountDestiny == null) {
             throw new AccountNotFoundException("No se encontro una cuenta con el userId: " + transaction.getUserIdDestiny());
+        }
 
         if (accountOrigin.getBalance() < transaction.getValue()) {
-            throw new InsufficientBalanceException("Saldo Insuficiente");
+            throw new InsufficientBalanceException("Fondos insuficientes!!!");
         }
 
         accountOrigin.setBalance(accountOrigin.getBalance() - transaction.getValue());
         accountOrigin.setLastChange(new Date());
-        accountRepository.save(accountOrigin);
+        this.accountRepository.save(accountOrigin);
 
         accountDestiny.setBalance(accountDestiny.getBalance() + transaction.getValue());
         accountDestiny.setLastChange(new Date());
-        accountRepository.save(accountDestiny);
+        this.accountRepository.save(accountDestiny);
 
         transaction.setDate(new Date());
-        return transactionRepository.save(transaction);
+        return this.transactionRepository.save(transaction);
     }
 
-
     @GetMapping("/transactions/{userId}")
-    List<Transaction> userTransaction(@PathVariable String userId) {
-        Account account = accountRepository.findById(userId).orElse(null);
+    List<Transaction> userTransactions(@PathVariable String userId) {
+        Account userAccount = this.accountRepository.findById(userId).orElse(null);
 
-        if (account == null) {
-            throw new AccountNotFoundException("El usuario " + userId + " no fue encontrado");
+        if (userAccount == null) {
+            throw new AccountNotFoundException("No se encontro una cuenta con el userId: " + userId);
         }
 
-        List<Transaction> transactionsOrigin = transactionRepository.findByUserOrigin(userId);
-        List<Transaction> transactionsDestiny = transactionRepository.findByUserDestiny(userId);
+        List<Transaction> transactionsOrigin = this.transactionRepository.findByUserIdOrigin(userId);
+        List<Transaction> transactionsDestiny = this.transactionRepository.findByUserIdDestiny(userId);
 
         List<Transaction> transactions = Stream.concat(transactionsOrigin.stream(), transactionsDestiny.stream()).collect(Collectors.toList());
         return transactions;

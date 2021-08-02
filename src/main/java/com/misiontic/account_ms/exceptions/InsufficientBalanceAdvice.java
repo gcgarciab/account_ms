@@ -13,7 +13,7 @@ public class InsufficientBalanceAdvice {
     @ResponseBody
     @ExceptionHandler(InsufficientBalanceException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
-    String InsufficientBalanceAdvice(InsufficientBalanceException ex){
+    String InsufficientBalanceAdvice(InsufficientBalanceException ex) {
         return ex.getMessage();
     }
 }

@@ -27,6 +27,6 @@ public class AccountController {
     @GetMapping("/accounts/{userId}")
     Account getAccount(@PathVariable String userId) {
         return this.accountRepository.findById(userId)
-                .orElseThrow(() -> new AccountNotFoundException("El usuario " + userId + " no fue encontrado"));
+                .orElseThrow(() -> new AccountNotFoundException("No se encontro una cuenta con el userId: " + userId));
     }
 }

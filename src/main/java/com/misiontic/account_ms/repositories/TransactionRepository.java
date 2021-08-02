@@ -6,6 +6,6 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import java.util.List;
 
 public interface TransactionRepository extends MongoRepository <Transaction, String> {
-    List<Transaction> findByUserOrigin(String userIdOrigin);
-    List<Transaction> findByUserDestiny(String userIdDestiny);
+    List<Transaction> findByUserIdOrigin(String userId);
+    List<Transaction> findByUserIdDestiny(String userId);
 }
